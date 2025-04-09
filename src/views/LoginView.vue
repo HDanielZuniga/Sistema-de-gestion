@@ -1,37 +1,45 @@
 <template>
   <div class="login-container">
     <div class="login-box">
-      <!-- Lado Izquierdo: Imagen + Frase -->
+      <!-- Sección izquierda: imagen de fondo y texto inspirador -->
       <div class="login-left">
-        <img src="/desert.jpg" alt="Login Illustration" />
+        <img src="/desert.jpg" alt="Ilustración de inicio de sesión" />
         <div class="overlay-text">
-          <h2>Capturing Moments,<br />Creating Memories</h2>
+          <h2>Capturando momentos,<br />creando recuerdos</h2>
         </div>
-        <button class="back-btn">Back to website</button>
+        <button class="back-btn">Volver al sitio</button>
       </div>
 
-      <!-- Lado Derecho: Formulario -->
+      <!-- Sección derecha: formulario de registro -->
       <div class="login-right">
-        <h1>Create an account</h1>
-        <p class="subtitle">Already have an account? <a href="#">Log in</a></p>
+        <h1>Crear una cuenta</h1>
+        <p class="subtitle">¿Ya tienes una cuenta? <a href="#">Inicia sesión</a></p>
 
+        <!-- Formulario de creación de cuenta -->
         <form @submit.prevent="submitForm">
+          <!-- Campo de nombres (nombre y apellido) -->
           <div class="name-group">
-            <input type="text" placeholder="First name" v-model="firstName" />
-            <input type="text" placeholder="Last name" v-model="lastName" />
+            <input type="text" placeholder="Nombre" v-model="firstName" />
+            <input type="text" placeholder="Apellido" v-model="lastName" />
           </div>
-          <input type="email" placeholder="Email" v-model="email" />
-          <input type="password" placeholder="Enter your password" v-model="password" />
 
+          <!-- Campo de correo y contraseña -->
+          <input type="email" placeholder="Correo electrónico" v-model="email" />
+          <input type="password" placeholder="Contraseña" v-model="password" />
+
+          <!-- Casilla para aceptar términos -->
           <label class="checkbox">
             <input type="checkbox" v-model="acceptedTerms" />
-            <span>I agree to the <a href="#">Terms & Conditions</a></span>
+            <span>Acepto los <a href="#">Términos y condiciones</a></span>
           </label>
 
-          <button class="submit-btn">Create account</button>
+          <!-- Botón para enviar el formulario -->
+          <button class="submit-btn">Crear cuenta</button>
 
-          <div class="divider">or register with</div>
+          <!-- Separador visual -->
+          <div class="divider">o regístrate con</div>
 
+          <!-- Botones para registro con Google o Apple -->
           <div class="social-buttons">
             <button class="google">Google</button>
             <button class="apple">Apple</button>
@@ -47,6 +55,7 @@ export default {
   name: "LoginView",
   data() {
     return {
+      // Variables para almacenar datos del formulario
       firstName: "",
       lastName: "",
       email: "",
@@ -55,20 +64,23 @@ export default {
     };
   },
   methods: {
+    // Método que se ejecuta al enviar el formulario
     submitForm() {
       console.log("Datos enviados:", {
-        firstName: this.firstName,
-        lastName: this.lastName,
-        email: this.email,
-        password: this.password,
-        acceptedTerms: this.acceptedTerms,
+        nombre: this.firstName,
+        apellido: this.lastName,
+        correo: this.email,
+        contraseña: this.password,
+        aceptoTerminos: this.acceptedTerms,
       });
+      // Aquí se podría agregar lógica para validar o enviar a backend
     }
   }
 };
 </script>
 
 <style scoped>
+/* Contenedor general centrado con fondo oscuro */
 .login-container {
   background-color: #2d2a3e;
   min-height: 100vh;
@@ -77,6 +89,7 @@ export default {
   align-items: center;
 }
 
+/* Caja principal dividida en dos secciones */
 .login-box {
   display: flex;
   width: 900px;
@@ -86,6 +99,7 @@ export default {
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
 }
 
+/* Sección izquierda: imagen y botón */
 .login-left {
   width: 50%;
   position: relative;
@@ -97,6 +111,7 @@ export default {
   object-fit: cover;
 }
 
+/* Texto superpuesto en la imagen */
 .overlay-text {
   position: absolute;
   bottom: 40px;
@@ -106,6 +121,7 @@ export default {
   font-weight: 500;
 }
 
+/* Botón para volver al sitio */
 .back-btn {
   position: absolute;
   top: 20px;
@@ -119,6 +135,7 @@ export default {
   font-size: 14px;
 }
 
+/* Sección derecha: formulario */
 .login-right {
   width: 50%;
   padding: 40px;
@@ -144,11 +161,13 @@ export default {
   text-decoration: none;
 }
 
+/* Agrupación horizontal de nombre y apellido */
 .name-group {
   display: flex;
   gap: 10px;
 }
 
+/* Estilos base para los inputs */
 input[type="text"],
 input[type="email"],
 input[type="password"] {
@@ -162,6 +181,7 @@ input[type="password"] {
   font-size: 15px;
 }
 
+/* Estilos para la casilla de términos */
 .checkbox {
   display: flex;
   align-items: center;
@@ -178,6 +198,7 @@ input[type="password"] {
   text-decoration: none;
 }
 
+/* Botón de crear cuenta */
 .submit-btn {
   width: 100%;
   background-color: #9a82f4;
@@ -195,6 +216,7 @@ input[type="password"] {
   background-color: #7d65d7;
 }
 
+/* Línea divisoria */
 .divider {
   text-align: center;
   margin: 20px 0;
@@ -202,6 +224,7 @@ input[type="password"] {
   font-size: 14px;
 }
 
+/* Botones de login alternativo */
 .social-buttons {
   display: flex;
   justify-content: space-between;
