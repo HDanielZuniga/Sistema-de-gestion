@@ -1,11 +1,11 @@
 <template>
   <div class="login-container">
     <div class="login-box">
-      <!-- Sección izquierda: imagen de fondo y texto inspirador -->
+      <!-- Lado Izquierdo: Imagen + Frase -->
       <div class="login-left">
-        <img src="/desert.jpg" alt="Ilustración de inicio de sesión" />
+        <img src="/desert.jpg" alt="Login Illustration" />
         <div class="overlay-text">
-          <h2>Capturando momentos,<br />creando recuerdos</h2>
+          <h2>Capturing Moments,<br />Creating Memories</h2>
         </div>
         <button class="back-btn" @click="goBack">Back to website</button>
       </div>
@@ -15,10 +15,10 @@
         <h1>Login</h1>
         <p class="subtitle">Need an account? <a href="#">Register here</a></p>
 
-        <!-- Formulario de login -->
         <form @submit.prevent="submitForm">
           <input type="email" placeholder="Email" v-model="email" required />
           <input type="password" placeholder="Enter your password" v-model="password" required />
+
           <button class="submit-btn" type="submit">Login</button>
         </form>
       </div>
@@ -37,7 +37,7 @@ export default {
   },
   methods: {
     submitForm() {
-      // Simulación de autenticación: sustituir esta lógica por la llamada real al backend.
+      // Simulación de autenticación: Se debe sustituir por la llamada real al back-end.
       console.log("Datos enviados:", { email: this.email, password: this.password });
       localStorage.setItem("authToken", "example_token");
       this.$router.push("/");
@@ -50,7 +50,6 @@ export default {
 </script>
 
 <style scoped>
-/* Contenedor general centrado con fondo oscuro */
 .login-container {
   background-color: #2d2a3e;
   min-height: 100vh;
@@ -59,7 +58,6 @@ export default {
   align-items: center;
 }
 
-/* Caja principal dividida en dos secciones */
 .login-box {
   display: flex;
   width: 900px;
@@ -69,7 +67,6 @@ export default {
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
 }
 
-/* Sección izquierda: imagen y botón */
 .login-left {
   width: 50%;
   position: relative;
@@ -81,7 +78,6 @@ export default {
   object-fit: cover;
 }
 
-/* Texto superpuesto en la imagen */
 .overlay-text {
   position: absolute;
   bottom: 40px;
@@ -91,7 +87,6 @@ export default {
   font-weight: 500;
 }
 
-/* Botón para volver al sitio */
 .back-btn {
   position: absolute;
   top: 20px;
@@ -105,7 +100,6 @@ export default {
   font-size: 14px;
 }
 
-/* Sección derecha: formulario */
 .login-right {
   width: 50%;
   padding: 40px;
