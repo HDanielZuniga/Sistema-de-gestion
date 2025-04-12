@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import MainLayout from "@/layouts/MainLayout.vue";
-import VistaUser from "@/views/VistaUser.vue";
+import VistaUser from '@/views/VistaUser.vue'
 import VistaDos from "@/views/VistaDos.vue";
 const routes = [
   {
