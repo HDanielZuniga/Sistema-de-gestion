@@ -7,35 +7,19 @@
         <div class="overlay-text">
           <h2>Capturing Moments,<br />Creating Memories</h2>
         </div>
-        <button class="back-btn">Back to website</button>
+        <button class="back-btn" @click="goBack">Back to website</button>
       </div>
 
-      <!-- Lado Derecho: Formulario -->
+      <!-- Lado Derecho: Formulario de Login -->
       <div class="login-right">
-        <h1>Create an account</h1>
-        <p class="subtitle">Already have an account? <a href="#">Log in</a></p>
+        <h1>Login</h1>
+        <p class="subtitle">Need an account? <a href="#">Register here</a></p>
 
         <form @submit.prevent="submitForm">
-          <div class="name-group">
-            <input type="text" placeholder="First name" v-model="firstName" />
-            <input type="text" placeholder="Last name" v-model="lastName" />
-          </div>
-          <input type="email" placeholder="Email" v-model="email" />
-          <input type="password" placeholder="Enter your password" v-model="password" />
+          <input type="email" placeholder="Email" v-model="email" required />
+          <input type="password" placeholder="Enter your password" v-model="password" required />
 
-          <label class="checkbox">
-            <input type="checkbox" v-model="acceptedTerms" />
-            <span>I agree to the <a href="#">Terms & Conditions</a></span>
-          </label>
-
-          <button class="submit-btn">Create account</button>
-
-          <div class="divider">or register with</div>
-
-          <div class="social-buttons">
-            <button class="google">Google</button>
-            <button class="apple">Apple</button>
-          </div>
+          <button class="submit-btn" type="submit">Login</button>
         </form>
       </div>
     </div>
@@ -47,22 +31,19 @@ export default {
   name: "LoginView",
   data() {
     return {
-      firstName: "",
-      lastName: "",
       email: "",
-      password: "",
-      acceptedTerms: false,
+      password: ""
     };
   },
   methods: {
     submitForm() {
-      console.log("Datos enviados:", {
-        firstName: this.firstName,
-        lastName: this.lastName,
-        email: this.email,
-        password: this.password,
-        acceptedTerms: this.acceptedTerms,
-      });
+      // Simulación de autenticación: Se debe sustituir por la llamada real al back-end.
+      console.log("Datos enviados:", { email: this.email, password: this.password });
+      localStorage.setItem("authToken", "example_token");
+      this.$router.push("/");
+    },
+    goBack() {
+      this.$router.push("/");
     }
   }
 };
@@ -144,12 +125,6 @@ export default {
   text-decoration: none;
 }
 
-.name-group {
-  display: flex;
-  gap: 10px;
-}
-
-input[type="text"],
 input[type="email"],
 input[type="password"] {
   width: 100%;
@@ -160,22 +135,6 @@ input[type="password"] {
   border-radius: 8px;
   color: white;
   font-size: 15px;
-}
-
-.checkbox {
-  display: flex;
-  align-items: center;
-  margin: 15px 0;
-  font-size: 14px;
-}
-
-.checkbox input {
-  margin-right: 8px;
-}
-
-.checkbox a {
-  color: #9a82f4;
-  text-decoration: none;
 }
 
 .submit-btn {
@@ -193,34 +152,5 @@ input[type="password"] {
 
 .submit-btn:hover {
   background-color: #7d65d7;
-}
-
-.divider {
-  text-align: center;
-  margin: 20px 0;
-  color: #aaa;
-  font-size: 14px;
-}
-
-.social-buttons {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.social-buttons button {
-  flex: 1;
-  padding: 10px;
-  background-color: #2e2b43;
-  border: 1px solid #555;
-  border-radius: 8px;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.social-buttons button:hover {
-  background-color: #444;
 }
 </style>
