@@ -1,7 +1,7 @@
 // models/User.js
-
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database'); // Este es el objeto conectado
+const { sequelize } = require('../config/database'); // CORRECTO: extraemos .sequelize
+const bcrypt = require('bcrypt');
 
 const User = sequelize.define('User', {
   firstName: {
@@ -14,16 +14,21 @@ const User = sequelize.define('User', {
   },
   email: {
     type: DataTypes.STRING,
-    unique: true,
     allowNull: false,
+    unique: true,
+    validate: {
+      isEmail: true,
+    },
   },
   password: {
     type: DataTypes.STRING,
     allowNull: false,
-  }
-}, {
-  tableName: 'Users', // Importante para que coincida con la migración
-  timestamps: true,
+  },
+});
+
+// Encriptar antes de guardar
+User.beforeCreate(async (user, options) => {
+  user.password = await bcrypt.hash(user.password, 10);
 });
 
 module.exports = User;
