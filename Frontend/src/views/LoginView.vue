@@ -7,18 +7,22 @@
         <div class="overlay-text">
           <h2>Capturing Moments,<br />Creating Memories</h2>
         </div>
-        <button class="back-btn" @click="goBack">Back to website</button>
+        <!-- Botón eliminado: no debe haber acceso sin login -->
+        <!-- <button class="back-btn" @click="goBack">Back to website</button> -->
       </div>
 
       <!-- Lado Derecho: Formulario de Login -->
       <div class="login-right">
         <h1>Login</h1>
-        <p class="subtitle">Need an account? <a href="#">Register here</a></p>
+        <p class="subtitle">
+          Need an account?
+          <router-link to="/register" style="color: #9a82f4; text-decoration: none;">Register here</router-link>
+        </p>
+        <p v-if="error" style="color: red; margin-top: 10px;">{{ error }}</p>
 
         <form @submit.prevent="submitForm">
           <input type="email" placeholder="Email" v-model="email" required />
           <input type="password" placeholder="Enter your password" v-model="password" required />
-
           <button class="submit-btn" type="submit">Login</button>
         </form>
       </div>
@@ -27,29 +31,40 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: "LoginView",
   data() {
     return {
       email: "",
-      password: ""
+      password: "",
+      error: null
     };
   },
   methods: {
-    submitForm() {
-      // Simulación de autenticación: Se debe sustituir por la llamada real al back-end.
-      console.log("Datos enviados:", { email: this.email, password: this.password });
-      localStorage.setItem("authToken", "example_token");
-      this.$router.push("/");
-    },
-    goBack() {
-      this.$router.push("/");
+    async submitForm() {
+      try {
+        const response = await axios.post("http://localhost:5000/api/auth/login", {
+          email: this.email,
+          password: this.password
+        });
+
+        const token = response.data.token;
+        localStorage.setItem("authToken", token);
+        this.$router.push("/");
+      } catch (error) {
+        this.error = "Credenciales incorrectas o error del servidor.";
+        console.error("Error de login:", error);
+        alert(this.error);
+      }
     }
   }
 };
 </script>
 
 <style scoped>
+/* Todo el estilo se mantiene exactamente igual */
 .login-container {
   background-color: #2d2a3e;
   min-height: 100vh;
@@ -118,11 +133,6 @@ export default {
   font-size: 14px;
   margin-bottom: 25px;
   color: #aaa;
-}
-
-.subtitle a {
-  color: #9a82f4;
-  text-decoration: none;
 }
 
 input[type="email"],
