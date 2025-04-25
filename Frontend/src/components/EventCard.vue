@@ -1,10 +1,21 @@
 <template>
-    <div class="event-card">
-      <h3>{{ localEvent.name }}</h3>
-      <p>📅 Fecha: {{ localEvent.date }}</p>
-      <p>⏰ Hora: {{ localEvent.time }}</p>
-      <p>📍 Lugar: {{ localEvent.location }}</p>
-      <p>👥 Invitados: {{ localEvent.guests }}</p>
+    <div class="event-card" @click="toggleExpand">
+      <div v-if="!isExpanded">
+        <!-- Vista contraída -->
+        <h3>{{ localEvent.name }}</h3>
+        <p>📅 Fecha: {{ localEvent.date }}</p>
+        <p>⏰ Hora: {{ localEvent.time }}</p>
+        <p>📍 Lugar: {{ localEvent.location }}</p>
+      </div>
+      <div v-else>
+        <!-- Vista expandida (modo de edición) -->
+        <input v-model="localEvent.name" placeholder="Nombre del evento" />
+        <input v-model="localEvent.date" type="date" />
+        <input v-model="localEvent.time" type="time" />
+        <input v-model="localEvent.location" placeholder="Lugar" />
+        <input v-model="localEvent.guests" type="number" placeholder="Número de invitados" />
+        <button @click.stop="saveChanges">Guardar</button>
+      </div>
     </div>
   </template>
   
@@ -13,8 +24,18 @@
     props: ["event"],
     data() {
       return {
-        localEvent: { ...this.event }, // Copia para evitar mutar las props
+        localEvent: { ...this.event }, // Copia local para edición
+        isExpanded: false, // Controla si la tarjeta está expandida
       };
+    },
+    methods: {
+      toggleExpand() {
+        this.isExpanded = !this.isExpanded; // Alterna entre expandido y contraído
+      },
+      saveChanges() {
+        this.$emit("update-event", this.localEvent); // Emite los cambios al componente padre
+        this.isExpanded = false; // Contrae la tarjeta después de guardar
+      },
     },
   };
   </script>
@@ -22,31 +43,37 @@
   <style scoped>
   .event-card {
     background: white;
-    padding: 10px;
-    border-radius: 10px;
+    padding: 15px; /* Un poco más de espacio interno */
+    border-radius: 15px; /* Bordes más redondeados */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 180px; /* Tamaño más compacto */
-    height: 120px; /* Reduce la altura */
+    width: 220px; /* Aumentamos el ancho */
+    height: 220px; /* Mismo valor que el ancho para mantener forma cuadrada */
     text-align: left;
     transition: transform 0.2s;
+    cursor: pointer;
     display: flex;
     flex-direction: column;
+    align-items: center;
     justify-content: center;
-    align-items: center; /* Centra los elementos */
+    overflow: hidden;
   }
   .event-card:hover {
     transform: scale(1.05);
   }
-  h3 {
-    margin-bottom: 5px;
-    color: #333;
-    font-size: 14px;
-    text-align: center; /* Centra el título */
+  input, button {
+    width: 90%;
+    padding: 6px;
+    margin: 3px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
   }
-  p {
-    margin: 2px 0;
-    font-size: 11px; /* Reduce tamaño del texto */
-    color: #555;
-    text-align: center; /* Centra el texto */
+  button {
+    background-color: #6a0dad;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #5a0cad;
   }
   </style>

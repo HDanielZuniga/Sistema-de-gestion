@@ -1,6 +1,12 @@
 <template>
     <div class="menu-view">
-      <EventCard v-for="(event, index) in events" :key="index" :event="event" />
+      <h1 class="title">Gestión De Eventos</h1>
+      <EventCard
+        v-for="(event, index) in events"
+        :key="index"
+        :event="event"
+        @update-event="updateEvent(index, $event)"
+      />
     </div>
   </template>
   
@@ -19,6 +25,11 @@
         ],
       };
     },
+    methods: {
+      updateEvent(index, updatedEvent) {
+        this.events[index] = updatedEvent; // Actualiza el evento en el arreglo principal
+      },
+    },
   };
   </script>
   
@@ -27,9 +38,21 @@
     background: #6a0dad; /* Morado sólido */
     min-height: 100vh;
     display: flex;
-    flex-wrap: wrap; /* Acomoda las tarjetas en filas */
-    gap: 10px; /* Menos espacio entre tarjetas */
-    justify-content: flex-start; /* Alinea las tarjetas desde la izquierda */
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-start;
+    align-items: flex-start;
     padding: 20px;
+  }
+  
+  /* 🎨 Estilos del título */
+  .title {
+    width: 100%;
+    text-align: center;
+    font-size: 36px;
+    font-family: 'Poppins', sans-serif; /* Fuente elegante */
+    color: white;
+    margin-bottom: 20px;
+    font-weight: bold;
   }
   </style>
