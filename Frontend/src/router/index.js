@@ -1,29 +1,39 @@
-import { createRouter, createWebHistory } from "vue-router";
-import MainLayout from "@/layouts/MainLayout.vue";
-import LoginView from "@/views/LoginView.vue";
-import VistaUser from "@/views/VistaUser.vue";
-import VistaDos from "@/views/VistaDos.vue";
+import { createRouter, createWebHistory } from 'vue-router';
+import LoginView from '@/views/LoginView.vue';
+import RegisterView from '@/views/RegisterView.vue';
+import VistaUser from '@/views/VistaUser.vue';
+import VistaDos from '@/views/VistaDos.vue';
+import MainLayout from '@/layouts/MainLayout.vue';
+import MenuView from '@/views/MenuView.vue';
 
-// Se definen dos grupos de rutas: públicas (login) y protegidas (dentro del layout)
 const routes = [
   {
-    path: "/login",
-    name: "Login",
+    path: '/login',
+    name: 'Login',
     component: LoginView,
   },
   {
-    path: "/",
+    path: '/register',
+    name: 'Register',
+    component: RegisterView,
+  },{
+    path: '/menu',
+    name: 'menu',
+    component: MenuView,
+  },
+  {
+    path: '/',
     component: MainLayout,
     meta: { requiresAuth: true },
     children: [
       {
-        path: "", // Ruta por defecto dentro del layout
-        name: "VistaUser",
+        path: '',
+        name: 'VistaUser',
         component: VistaUser,
       },
       {
-        path: "vistados", // Nota: sin barra inicial para rutas hijas
-        name: "VistaDos",
+        path: 'vistados',
+        name: 'VistaDos',
         component: VistaDos,
       },
     ],
@@ -35,12 +45,12 @@ const router = createRouter({
   routes,
 });
 
-// Guardia global de rutas: Si la ruta requiere autenticación, se verifica la existencia de un token.
+// Guardia de autenticación
 router.beforeEach((to, from, next) => {
-  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
-  const isAuthenticated = !!localStorage.getItem("authToken"); // Se deberá reemplazar por una validación real
-  if (requiresAuth && !isAuthenticated) {
-    next({ name: "Login" });
+  const token = localStorage.getItem("authToken");
+  if (to.meta.requiresAuth && !token) {
+    alert("Debes iniciar sesión para acceder.");
+    next("/login");
   } else {
     next();
   }
