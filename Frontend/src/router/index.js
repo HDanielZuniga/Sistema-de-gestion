@@ -4,6 +4,7 @@ import RegisterView from '@/views/RegisterView.vue';
 import VistaUser from '@/views/VistaUser.vue';
 import VistaDos from '@/views/VistaDos.vue';
 import MainLayout from '@/layouts/MainLayout.vue';
+import MenuView from '@/views/MenuView.vue';
 
 const routes = [
   {
@@ -15,6 +16,10 @@ const routes = [
     path: '/register',
     name: 'Register',
     component: RegisterView,
+  },{
+    path: '/menu',
+    name: 'menu',
+    component: MenuView,
   },
   {
     path: '/',
