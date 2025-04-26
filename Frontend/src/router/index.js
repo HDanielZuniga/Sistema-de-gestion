@@ -1,25 +1,32 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import LoginView from '@/views/LoginView.vue';
-import RegisterView from '@/views/RegisterView.vue';
-import VistaUser from '@/views/VistaUser.vue';
-import VistaDos from '@/views/VistaDos.vue';
-import MainLayout from '@/layouts/MainLayout.vue';
-import MenuView from '@/views/MenuView.vue';
+import { createRouter, createWebHistory } from 'vue-router'
+
+// Vistas públicas (Login/Register)
+import AuthView from '@/views/AuthView.vue'
+import LoginView from '@/views/LoginView.vue'
+import RegisterView from '@/views/RegisterView.vue'
+
+// Layout y vistas protegidas
+import MainLayout from '@/layouts/MainLayout.vue'
+import MenuView from '@/views/MenuView.vue'
 
 const routes = [
   {
-    path: '/login',
-    name: 'Login',
-    component: LoginView,
-  },
-  {
-    path: '/register',
-    name: 'Register',
-    component: RegisterView,
-  },{
-    path: '/menu',
-    name: 'menu',
-    component: MenuView,
+    path: '/auth',
+    component: AuthView,
+    children: [
+      {
+        path: 'login',
+        name: 'Login',
+        component: LoginView,
+        meta: { requiresGuest: true }
+      },
+      {
+        path: 'register',
+        name: 'Register',
+        component: RegisterView,
+        meta: { requiresGuest: true }
+      }
+    ]
   },
   {
     path: '/',
@@ -28,32 +35,38 @@ const routes = [
     children: [
       {
         path: '',
-        name: 'VistaUser',
-        component: VistaUser,
+        name: 'Menu',
+        component: MenuView
       },
-      {
-        path: 'vistados',
-        name: 'VistaDos',
-        component: VistaDos,
-      },
-    ],
+    ]
   },
-];
+  {
+    path: '/:catchAll(.*)',
+    redirect: '/auth/login'
+  }
+]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes,
-});
+  history: createWebHistory(),
+  routes
+})
 
-// Guardia de autenticación
+//  Verifica si hay token en localStorage
+function isAuthenticated() {
+  return !!localStorage.getItem('authToken')
+}
+
+//  Protección de rutas
 router.beforeEach((to, from, next) => {
-  const token = localStorage.getItem("authToken");
-  if (to.meta.requiresAuth && !token) {
-    alert("Debes iniciar sesión para acceder.");
-    next("/login");
-  } else {
-    next();
-  }
-});
+  const auth = isAuthenticated()
 
-export default router;
+  if (to.meta.requiresAuth && !auth) {
+    next('/auth/login')
+  } else if (to.meta.requiresGuest && auth) {
+    next('/')
+  } else {
+    next()
+  }
+})
+
+export default router

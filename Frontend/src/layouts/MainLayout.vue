@@ -1,20 +1,19 @@
 <template>
-    <div>
-      <h1>Aquí puede ir el menú principal</h1>
-  
-      <button  @click="router.push('/')"> user </button>
-      <button  @click="router.push('/vistados')" > dos </button>
-    </div>
-    <router-view />
-  
-    <div>
-      <h1>Este es el footer</h1>
-    </div>
-  </template>
-  
-  <script setup>
-  import { useRouter } from 'vue-router'
-  
-  const router = useRouter()
-  </script>
-  
+  <div>
+    <!-- Si la ruta es /vistauser, /vistados, etc., uso GlobalLayout -->
+    <GlobalLayout v-if="useGlobalLayout">
+      <router-view />
+    </GlobalLayout>
+
+    <!-- Si la ruta es / (menú), renderizo normal -->
+    <router-view v-else />
+  </div>
+</template>
+
+<script setup>
+import { useRoute } from 'vue-router'
+import GlobalLayout from '@/layouts/GlobalLayout.vue'
+
+const route = useRoute()
+const useGlobalLayout = ['/vistauser', '/vistados'].includes(route.path)
+</script>

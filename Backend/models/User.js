@@ -1,6 +1,6 @@
 // models/User.js
 const { DataTypes } = require('sequelize');
-const { sequelize } = require('../config/database'); // CORRECTO: extraemos .sequelize
+const { sequelize } = require('../config/database');
 const bcrypt = require('bcrypt');
 
 const User = sequelize.define('User', {
@@ -26,8 +26,8 @@ const User = sequelize.define('User', {
   },
 });
 
-// Encriptar antes de guardar
-User.beforeCreate(async (user, options) => {
+// Encriptar password antes de guardar
+User.beforeCreate(async (user) => {
   user.password = await bcrypt.hash(user.password, 10);
 });
 
