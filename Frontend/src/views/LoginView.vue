@@ -5,24 +5,22 @@
       <div class="login-left">
         <img src="/desert.jpg" alt="Login Illustration" />
         <div class="overlay-text">
-          <h2>Capturing Moments,<br />Creating Memories</h2>
+          <h2>Capturando Momentos,<br />Creando Memorias</h2>
         </div>
-        <!-- Botón eliminado: no debe haber acceso sin login -->
-        <!-- <button class="back-btn" @click="goBack">Back to website</button> -->
       </div>
 
       <!-- Lado Derecho: Formulario de Login -->
       <div class="login-right">
         <h1>Login</h1>
         <p class="subtitle">
-          Need an account?
-          <router-link to="/register" style="color: #9a82f4; text-decoration: none;">Register here</router-link>
+          No tienes cuenta?
+          <router-link to="/auth/register" style="color: #9a82f4; text-decoration: none;">Registrate </router-link>
         </p>
         <p v-if="error" style="color: red; margin-top: 10px;">{{ error }}</p>
 
         <form @submit.prevent="submitForm">
           <input type="email" placeholder="Email" v-model="email" required />
-          <input type="password" placeholder="Enter your password" v-model="password" required />
+          <input type="password" placeholder="Ingresa tu contraseña" v-model="password" required />
           <button class="submit-btn" type="submit">Login</button>
         </form>
       </div>
@@ -52,7 +50,12 @@ export default {
 
         const token = response.data.token;
         localStorage.setItem("authToken", token);
-        this.$router.push("/");
+
+        //  Redirección segura con recarga
+        this.$router.push("/").then(() => {
+          window.location.reload();
+        });
+
       } catch (error) {
         this.error = "Credenciales incorrectas o error del servidor.";
         console.error("Error de login:", error);
@@ -64,13 +67,22 @@ export default {
 </script>
 
 <style scoped>
-/* Todo el estilo se mantiene exactamente igual */
+/*  Ocupa toda la pantalla SIN scroll */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/*  Fondo principal y contenedor */
 .login-container {
   background-color: #2d2a3e;
-  min-height: 100vh;
+  position: fixed;
+  inset: 0;
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
 .login-box {
@@ -91,6 +103,7 @@ export default {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
 .overlay-text {
@@ -100,19 +113,6 @@ export default {
   color: #fff;
   font-size: 20px;
   font-weight: 500;
-}
-
-.back-btn {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  padding: 8px 14px;
-  color: #fff;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 14px;
 }
 
 .login-right {

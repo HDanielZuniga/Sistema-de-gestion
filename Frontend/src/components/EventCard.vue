@@ -8,7 +8,7 @@
         <p>📍 Lugar: {{ localEvent.location }}</p>
       </div>
       <div v-else>
-        <!-- Vista expandida (modo de edición) -->
+        
         <input v-model="localEvent.name" placeholder="Nombre del evento" />
         <input v-model="localEvent.date" type="date" />
         <input v-model="localEvent.time" type="time" />
