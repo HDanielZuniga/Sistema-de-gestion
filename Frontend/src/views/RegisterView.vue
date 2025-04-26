@@ -5,25 +5,25 @@
       <div class="register-left">
         <img src="/register.jpg" alt="Register Illustration" />
         <div class="overlay-text">
-          <h2>Join Us,<br />Start Creating</h2>
+          <h2>Unete,<br />Captura tus momentos</h2>
         </div>
       </div>
 
       <!-- Lado Derecho: Formulario de Registro -->
       <div class="register-right">
-        <h1>Register</h1>
+        <h1>Registrate</h1>
         <p class="subtitle">
-          Already have an account?
-          <router-link to="/auth/login" style="color: #9a82f4; text-decoration: none;">Login here</router-link>
+          Ya tienes tu cuenta?
+          <router-link to="/auth/login" style="color: #9a82f4; text-decoration: none;">Ingresa aqui</router-link>
         </p>
         <p v-if="error" style="color: red; margin-top: 10px;">{{ error }}</p>
 
         <form @submit.prevent="submitForm">
-          <input type="text" placeholder="First Name" v-model="firstName" required />
-          <input type="text" placeholder="Last Name" v-model="lastName" required />
+          <input type="text" placeholder="Primer nombre" v-model="firstName" required />
+          <input type="text" placeholder="Segundo nombre" v-model="lastName" required />
           <input type="email" placeholder="Email" v-model="email" required />
-          <input type="password" placeholder="Password" v-model="password" required />
-          <button class="submit-btn" type="submit">Register</button>
+          <input type="password" placeholder="Contraseña" v-model="password" required />
+          <button class="submit-btn" type="submit">Registrate</button>
         </form>
       </div>
     </div>

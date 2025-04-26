@@ -5,7 +5,7 @@
       <div class="login-left">
         <img src="/desert.jpg" alt="Login Illustration" />
         <div class="overlay-text">
-          <h2>Capturing Moments,<br />Creating Memories</h2>
+          <h2>Capturando Momentos,<br />Creando Memorias</h2>
         </div>
       </div>
 
@@ -13,14 +13,14 @@
       <div class="login-right">
         <h1>Login</h1>
         <p class="subtitle">
-          Need an account?
-          <router-link to="/auth/register" style="color: #9a82f4; text-decoration: none;">Register here</router-link>
+          No tienes cuenta?
+          <router-link to="/auth/register" style="color: #9a82f4; text-decoration: none;">Registrate </router-link>
         </p>
         <p v-if="error" style="color: red; margin-top: 10px;">{{ error }}</p>
 
         <form @submit.prevent="submitForm">
           <input type="email" placeholder="Email" v-model="email" required />
-          <input type="password" placeholder="Enter your password" v-model="password" required />
+          <input type="password" placeholder="Ingresa tu contraseña" v-model="password" required />
           <button class="submit-btn" type="submit">Login</button>
         </form>
       </div>
@@ -51,7 +51,7 @@ export default {
         const token = response.data.token;
         localStorage.setItem("authToken", token);
 
-        // ✅ Redirección segura con recarga
+        //  Redirección segura con recarga
         this.$router.push("/").then(() => {
           window.location.reload();
         });
@@ -67,14 +67,14 @@ export default {
 </script>
 
 <style scoped>
-/* ✅ Ocupa toda la pantalla SIN scroll */
+/*  Ocupa toda la pantalla SIN scroll */
 html, body {
   margin: 0;
   padding: 0;
   overflow: hidden;
 }
 
-/* ✅ Fondo principal y contenedor */
+/*  Fondo principal y contenedor */
 .login-container {
   background-color: #2d2a3e;
   position: fixed;
