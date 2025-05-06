@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <!-- Si la ruta es /vistauser, /vistados, etc., uso GlobalLayout -->
+  <div class="layout">
+    <!-- Si la ruta es /vistauser o /vistados, se usa GlobalLayout -->
     <GlobalLayout v-if="useGlobalLayout">
       <router-view />
     </GlobalLayout>
