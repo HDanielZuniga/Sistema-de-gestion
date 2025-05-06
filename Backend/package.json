@@ -2,14 +2,15 @@
   "name": "proyectsystem-backend",
   "version": "1.0.0",
   "description": "Backend para ProyectSystem",
+  "keywords": [],
+  "license": "ISC",
+  "author": "TuNombre",
+  "type": "commonjs",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js"
   },
-  "keywords": [],
-  "author": "TuNombre",
-  "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
