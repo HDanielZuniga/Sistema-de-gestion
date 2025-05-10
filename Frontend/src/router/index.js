@@ -11,6 +11,10 @@ import MenuView from '@/views/MenuView.vue'
 
 const routes = [
   {
+    path: '/',
+    redirect: '/auth/login' // Vista principal redirige al login
+  },
+  {
     path: '/auth',
     component: AuthView,
     children: [
@@ -29,7 +33,7 @@ const routes = [
     ]
   },
   {
-    path: '/',
+    path: '/app',
     component: MainLayout,
     meta: { requiresAuth: true },
     children: [
@@ -37,12 +41,12 @@ const routes = [
         path: '',
         name: 'Menu',
         component: MenuView
-      },
+      }
     ]
   },
   {
     path: '/:catchAll(.*)',
-    redirect: '/auth/login'
+    redirect: '/auth/login' // Redirige rutas no encontradas al login
   }
 ]
 
@@ -51,19 +55,19 @@ const router = createRouter({
   routes
 })
 
-//  Verifica si hay token en localStorage
+// Verifica si hay token en localStorage
 function isAuthenticated() {
   return !!localStorage.getItem('authToken')
 }
 
-//  Protección de rutas
+// Protección de rutas
 router.beforeEach((to, from, next) => {
   const auth = isAuthenticated()
 
   if (to.meta.requiresAuth && !auth) {
     next('/auth/login')
   } else if (to.meta.requiresGuest && auth) {
-    next('/')
+    next('/app')
   } else {
     next()
   }
