@@ -1,164 +1,176 @@
 <template>
-  <div class="contenedor-principal">
-    <h1 class="titulo">Gestión de Eventos</h1>
+  <div class="gestion-container">
+    <!-- Botón cerrar sesión en esquina superior derecha -->
+    <button class="btn-logout" @click="logout">Cerrar Sesión</button>
 
-    <!-- Tarjetas Crear / Editar -->
-    <div class="opciones">
-      <div class="opcion crear" @click="mostrarFormulario('crear')">
-        <h2>+ Crear Evento</h2>
-        <p>Agrega un nuevo evento al sistema</p>
+    <div class="gestion-box">
+      <h1>Gestión de Eventos</h1>
+
+      <div class="opciones">
+        <button class="submit-btn" @click="mostrarFormulario('crear')">+ Crear Evento</button>
+        <button class="submit-btn" @click="mostrarFormulario('editar')">Editar Evento</button>
       </div>
 
-      <div class="opcion editar" @click="mostrarFormulario('editar')">
-        <h2>Editar Evento</h2>
-        <p>Modifica un evento ya creado</p>
+      <div v-if="modo === 'crear'" class="formulario-evento">
+        <h3>Crear Nuevo Evento</h3>
+        <form @submit.prevent="guardarEvento">
+          <input v-model="nombre" placeholder="Nombre del evento" required />
+          <input v-model="fecha" type="date" required />
+          <input v-model="lugar" placeholder="Lugar del evento" required />
+          <input v-model="cantidad" type="number" min="1" placeholder="# de personas" required />
+          <button class="submit-btn" type="submit">Guardar Evento</button>
+        </form>
       </div>
-    </div>
 
-    <!-- Eventos siempre visibles -->
-    <div class="eventos-creados">
-      <h3 class="titulo">Eventos ya creados:</h3>
-      <div class="lista-eventos">
-        <div
-          v-for="evento in eventos"
-          :key="evento.id"
-          class="evento"
-        >
-          <strong>{{ evento.nombre }}</strong><br />
-          <span>{{ evento.fecha }}</span> - {{ evento.lugar }} ({{ evento.cantidad }} personas)
+      <div class="eventos-creados">
+        <h3>Eventos ya creados:</h3>
+        <div class="lista-eventos">
+          <div
+            v-for="evento in eventos"
+            :key="evento.id"
+            class="event-card"
+            @click="modo === 'editar' ? cargarEvento(evento) : null"
+          >
+            <div v-if="eventoSeleccionado?.id !== evento.id">
+              <h3>{{ evento.nombre }}</h3>
+              <p>📅 {{ evento.fecha }}</p>
+              <p>📍 {{ evento.lugar }}</p>
+              <p>👥 {{ evento.cantidad }} personas</p>
+            </div>
+            <div v-else>
+              <h3>Editar Evento</h3>
+              <form @submit.prevent="actualizarEvento">
+                <input v-model="eventoSeleccionado.nombre" placeholder="Nombre del evento" required />
+                <input v-model="eventoSeleccionado.fecha" type="date" required />
+                <input v-model="eventoSeleccionado.lugar" placeholder="Lugar del evento" required />
+                <input v-model="eventoSeleccionado.cantidad" type="number" min="1" required />
+                <button class="submit-btn" type="submit">Actualizar Evento</button>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-
-    <!-- Selección para edición -->
-    <div v-if="modo === 'editar'" class="seleccion-edicion">
-      <h3>Selecciona un evento para editar:</h3>
-      <div class="lista-eventos">
-        <div
-          v-for="evento in eventos"
-          :key="evento.id"
-          class="evento editable"
-          @click="cargarEvento(evento)"
-        >
-          {{ evento.nombre }} - {{ evento.fecha }}
-        </div>
-      </div>
-    </div>
-
-    <!-- Formulario -->
-    <div v-if="modo === 'crear' || eventoSeleccionado" class="formulario-evento">
-      <h3>{{ modo === 'crear' ? 'Crear Evento' : 'Editar Evento' }}</h3>
-      <form @submit.prevent="guardarEvento">
-        <input v-model="nombre" placeholder="Nombre del evento" required />
-        <input v-model="fecha" type="date" required />
-        <input v-model="lugar" placeholder="Lugar del evento" required />
-        <input v-model="cantidad" type="number" min="1" required />
-        <button type="submit">
-          {{ modo === 'crear' ? 'Guardar Evento' : 'Actualizar Evento' }}
-        </button>
-      </form>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
-const modo = ref(null);
-const nombre = ref('');
-const fecha = ref('');
-const lugar = ref('');
-const cantidad = ref(1);
-const eventoSeleccionado = ref(null);
+const router = useRouter()
 
-const eventos = ref([
-  { id: 1, nombre: 'Concierto de Rock', fecha: '2025-07-20', lugar: 'Estadio Nacional', cantidad: 5000 },
-  { id: 2, nombre: 'Conferencia Tech', fecha: '2025-08-15', lugar: 'Centro de Convenciones', cantidad: 300 },
-  { id: 3, nombre: 'Festival de Comedia', fecha: '2025-09-10', lugar: 'Teatro Central', cantidad: 200 },
-]);
+const eventos = ref([])
+const nombre = ref('')
+const fecha = ref('')
+const lugar = ref('')
+const cantidad = ref('')
+const modo = ref('')
+const eventoSeleccionado = ref(null)
 
 const mostrarFormulario = (tipo) => {
-  modo.value = tipo;
-  eventoSeleccionado.value = null;
-  nombre.value = '';
-  fecha.value = '';
-  lugar.value = '';
-  cantidad.value = 1;
-};
-
-const cargarEvento = (evento) => {
-  eventoSeleccionado.value = evento;
-  nombre.value = evento.nombre;
-  fecha.value = evento.fecha;
-  lugar.value = evento.lugar;
-  cantidad.value = evento.cantidad;
-};
+  modo.value = tipo
+  eventoSeleccionado.value = null
+}
 
 const guardarEvento = () => {
-  const evento = {
+  eventos.value.push({
+    id: Date.now(),
     nombre: nombre.value,
     fecha: fecha.value,
     lugar: lugar.value,
-    cantidad: cantidad.value,
-  };
+    cantidad: cantidad.value
+  })
 
-  if (modo.value === 'crear') {
-    console.log('Evento guardado:', evento);
-  } else {
-    console.log('Evento actualizado:', evento);
+  nombre.value = ''
+  fecha.value = ''
+  lugar.value = ''
+  cantidad.value = ''
+}
+
+const cargarEvento = (evento) => {
+  eventoSeleccionado.value = { ...evento }
+}
+
+const actualizarEvento = () => {
+  const index = eventos.value.findIndex(e => e.id === eventoSeleccionado.value.id)
+  if (index !== -1) {
+    eventos.value[index] = { ...eventoSeleccionado.value }
+    eventoSeleccionado.value = null
   }
-};
+}
+
+const logout = () => {
+  localStorage.removeItem('authToken')
+  alert('Sesión cerrada con éxito') // ← OPCIONAL
+  router.push('/auth/login')
+}
+
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
-
-body {
-  background-color: #111;
-  color: #f5f5f5;
-  font-family: 'Orbitron', sans-serif;
-  margin: 0;
-  padding: 0;
-}
-
-.contenedor-principal {
-  max-width: 1200px;
-  margin: auto;
+.gestion-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #1e1e2f;
+  color: #ffffff;
   padding: 2rem;
-  background-color: #141414;
-  border-radius: 1rem;
-  box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
-  overflow: hidden;
+  position: relative;
 }
 
-.titulo {
-  font-size: 3rem;
-  color: #ff007f;
+.gestion-box {
+  background-color: #2c2c3e;
+  padding: 2rem;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 800px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+h1, h3 {
+  color: #ffffff;
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .opciones {
   display: flex;
-  justify-content: space-around;
-  gap: 2rem;
+  justify-content: center;
+  gap: 1rem;
   margin-bottom: 2rem;
 }
 
-.opcion {
-  flex: 1;
-  padding: 1.5rem;
-  border-radius: 1rem;
-  background: linear-gradient(135deg, #ff007f, #00bfff);
+.submit-btn {
+  padding: 0.6rem 1.2rem;
+  background-color: #0f62fe;
+  border: none;
   color: white;
+  border-radius: 8px;
   cursor: pointer;
-  box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
 }
 
-.opcion:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 0 35px rgba(255, 0, 255, 0.7);
+.submit-btn:hover {
+  background-color: #0353e9;
+}
+
+input {
+  display: block;
+  width: 100%;
+  margin: 0.5rem 0;
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: none;
+  background-color: #3a3a4f;
+  color: white;
+}
+
+input::placeholder {
+  color: #b0b0b0;
 }
 
 .eventos-creados {
@@ -167,76 +179,29 @@ body {
 
 .lista-eventos {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   gap: 1rem;
-  margin-top: 1rem;
 }
 
-.evento {
-  background-color: #222;
-  padding: 1rem;
-  border-radius: 0.8rem;
-  border: 1px solid #333;
-  color: white;
-  transition: background 0.3s ease, transform 0.3s ease;
-}
-
-.evento strong {
-  color: #ff007f;
-  font-size: 1.1rem;
-}
-
-.evento:hover {
-  background-color: #333;
-  transform: scale(1.05);
-}
-
-.evento.editable {
-  cursor: pointer;
-}
-
-.evento.editable:hover {
-  background-color: #444;
-}
-
-.formulario-evento {
-  margin-top: 3rem;
-  padding: 1.5rem;
-  background-color: #1c1f26;
-  border-radius: 1rem;
-  box-shadow: inset 0 0 15px rgba(0, 255, 255, 0.1);
-}
-
-input {
-  width: 100%;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  background-color: #2e2e2e;
-  border: 1px solid #444;
-  color: #f5f5f5;
-  border-radius: 0.5rem;
-  font-size: 1.1rem;
-}
-
-input:focus {
-  border-color: #00ffff;
-  outline: none;
-}
-
-button {
-  background: linear-gradient(135deg, #00bfff, #ff007f);
+/* Estilo del botón cerrar sesión */
+.btn-logout {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #9a82f4;
   border: none;
-  padding: 1rem 2rem;
-  font-size: 1.1rem;
+  padding: 6px 12px;
+  border-radius: 6px;
   color: white;
+  font-weight: bold;
   cursor: pointer;
-  border-radius: 0.5rem;
-  box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-  transition: transform 0.3s ease;
+  font-size: 0.9rem;
+  box-shadow: 0 0 10px rgba(154, 130, 244, 0.7);
+  transition: background-color 0.3s ease;
+  z-index: 1000;
 }
 
-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 15px rgba(255, 0, 255, 0.7);
+.btn-logout:hover {
+  background-color: #7d65d7;
 }
 </style>
