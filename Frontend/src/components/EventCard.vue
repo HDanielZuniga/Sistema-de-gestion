@@ -17,61 +17,16 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: ["event"],
-  data() {
-    return {
-      localEvent: { ...this.event },
-      isExpanded: false,
-    };
-  },
-  methods: {
-    toggleExpand() {
-      this.isExpanded = !this.isExpanded;
-    },
-    saveChanges() {
-      this.$emit("update-event", this.localEvent);
-      this.isExpanded = false;
-    },
-  },
-};
+<script setup>
+import { useEventCard } from '@/controllers/useEventCard'
+import { defineProps, defineEmits } from 'vue'
+
+const props = defineProps(['event'])
+const emit = defineEmits(['update-event'])
+
+const { localEvent, isExpanded, toggleExpand, saveChanges } = useEventCard(props, emit)
 </script>
 
 <style scoped>
-.event-card {
-  background: white;
-  padding: 15px;
-  border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  width: 220px;
-  height: 220px;
-  text-align: left;
-  transition: transform 0.2s;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-.event-card:hover {
-  transform: scale(1.05);
-}
-input, button {
-  width: 90%;
-  padding: 6px;
-  margin: 3px 0;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-button {
-  background-color: #6a0dad;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-button:hover {
-  background-color: #5a0cad;
-}
+/* ... mismo estilo que ya tienes ... */
 </style>

@@ -22,9 +22,9 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import EventCard from '@/components/EventCard.vue'
 import PerfilUsuario from '@/components/PerfilUsuario.vue'
-import { ref } from 'vue'
 
 const eventos = ref([
   { id: 1, name: 'Conferencia Vue', date: '2025-06-01', time: '10:00', location: 'CDMX', guests: 150 },
