@@ -1,7 +1,19 @@
 <template>
   <div class="gestion-container">
-    <!-- Botón cerrar sesión en esquina superior derecha -->
-    <button class="btn-logout" @click="logout">Cerrar Sesión</button>
+    <!-- Botón que abre el menú emergente de perfil -->
+    <button class="btn-perfil" @click="mostrarPerfil = true">👤</button>
+
+    <!-- Ventana emergente del perfil -->
+    <div v-if="mostrarPerfil" class="overlay" @click.self="mostrarPerfil = false">
+      <div class="perfil-popup">
+        <h2>👤 Mi Perfil</h2>
+        <p><strong>Nombre:</strong> Juan Pérez</p>
+        <p><strong>Correo:</strong> juan.perez@example.com</p>
+        <p><strong>Teléfono:</strong> +57 312 345 6789</p>
+        <button class="btn-cerrar-sesion" @click="logout">Cerrar Sesión</button>
+        <button class="btn-cerrar" @click="mostrarPerfil = false">✖</button>
+      </div>
+    </div>
 
     <div class="gestion-box">
       <h1>Gestión de Eventos</h1>
@@ -31,7 +43,7 @@
             class="event-card"
             @click="modo === 'editar' ? cargarEvento(evento) : null"
           >
-            <div v-if="eventoSeleccionado?.id !== evento.id">
+            <div v-if="!eventoSeleccionado || eventoSeleccionado.id !== evento.id">
               <h3>{{ evento.nombre }}</h3>
               <p>📅 {{ evento.fecha }}</p>
               <p>📍 {{ evento.lugar }}</p>
@@ -67,6 +79,7 @@ const lugar = ref('')
 const cantidad = ref('')
 const modo = ref('')
 const eventoSeleccionado = ref(null)
+const mostrarPerfil = ref(false)
 
 const mostrarFormulario = (tipo) => {
   modo.value = tipo
@@ -81,7 +94,6 @@ const guardarEvento = () => {
     lugar: lugar.value,
     cantidad: cantidad.value
   })
-
   nombre.value = ''
   fecha.value = ''
   lugar.value = ''
@@ -89,23 +101,17 @@ const guardarEvento = () => {
 }
 
 const cargarEvento = (evento) => {
-  eventoSeleccionado.value = { ...evento }
+  eventoSeleccionado.value = evento // Referencia directa
 }
 
 const actualizarEvento = () => {
-  const index = eventos.value.findIndex(e => e.id === eventoSeleccionado.value.id)
-  if (index !== -1) {
-    eventos.value[index] = { ...eventoSeleccionado.value }
-    eventoSeleccionado.value = null
-  }
+  eventoSeleccionado.value = null // Cierra formulario tras actualizar
 }
 
 const logout = () => {
   localStorage.removeItem('authToken')
-  alert('Sesión cerrada con éxito') // ← OPCIONAL
   router.push('/auth/login')
 }
-
 </script>
 
 <style scoped>
@@ -183,25 +189,101 @@ input::placeholder {
   gap: 1rem;
 }
 
-/* Estilo del botón cerrar sesión */
-.btn-logout {
+/* Mejoras en las cartas de eventos */
+.event-card {
+  background: linear-gradient(145deg, #454565, #2b2b3c);
+  padding: 1.5rem;
+  border-radius: 16px;
+  flex: 1 1 45%;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(15, 98, 254, 0.3);
+  border: 1px solid transparent;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+  color: #e0e0ff;
+}
+
+.event-card:hover {
+  transform: translateY(-6px);
+  border-color: #0f62fe;
+  box-shadow: 0 8px 25px rgba(15, 98, 254, 0.6);
+}
+
+.event-card h3 {
+  margin-bottom: 0.6rem;
+  font-weight: 700;
+  color: #cbd5ff;
+  text-shadow: 0 0 8px #0f62fe99;
+}
+
+.event-card p {
+  margin: 0.3rem 0;
+  font-weight: 500;
+  color: #a0aaffcc;
+  text-shadow: 0 0 4px #0f62fe66;
+}
+
+.btn-perfil {
   position: fixed;
   top: 20px;
   right: 20px;
   background-color: #9a82f4;
   border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
+  padding: 10px 16px;
+  border-radius: 50%;
   color: white;
+  font-size: 1.1rem;
   font-weight: bold;
   cursor: pointer;
-  font-size: 0.9rem;
   box-shadow: 0 0 10px rgba(154, 130, 244, 0.7);
-  transition: background-color 0.3s ease;
+  z-index: 1001;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: 40px;
   z-index: 1000;
 }
 
-.btn-logout:hover {
-  background-color: #7d65d7;
+.perfil-popup {
+  background-color: #ffffff;
+  color: #333;
+  padding: 2rem;
+  border-radius: 12px;
+  min-width: 300px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.btn-cerrar-sesion {
+  background-color: #e74c3c;
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  margin-top: 1rem;
+  font-weight: bold;
+  width: 100%;
+  cursor: pointer;
+}
+
+.btn-cerrar {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
 }
 </style>
