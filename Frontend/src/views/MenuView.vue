@@ -1,17 +1,17 @@
 <template>
   <div class="gestion-container">
     <!-- Botón que abre el menú emergente de perfil -->
-    <button class="btn-perfil" @click="mostrarPerfil = true">👤</button>
+    <button class="btn-perfil" @click="mostrarPerfil = true"></button>
 
     <!-- Ventana emergente del perfil -->
     <div v-if="mostrarPerfil" class="overlay" @click.self="mostrarPerfil = false">
       <div class="perfil-popup">
-        <h2>👤 Mi Perfil</h2>
+        <h2>Mi Perfil</h2>
         <p><strong>Nombre:</strong> Juan Pérez</p>
         <p><strong>Correo:</strong> juan.perez@example.com</p>
         <p><strong>Teléfono:</strong> +57 312 345 6789</p>
         <button class="btn-cerrar-sesion" @click="logout">Cerrar Sesión</button>
-        <button class="btn-cerrar" @click="mostrarPerfil = false">✖</button>
+        <button class="btn-cerrar" @click="mostrarPerfil = false"></button>
       </div>
     </div>
 
@@ -45,9 +45,9 @@
           >
             <div v-if="!eventoSeleccionado || eventoSeleccionado.id !== evento.id">
               <h3>{{ evento.nombre }}</h3>
-              <p>📅 {{ evento.fecha }}</p>
-              <p>📍 {{ evento.lugar }}</p>
-              <p>👥 {{ evento.cantidad }} personas</p>
+              <p>{{ evento.fecha }}</p>
+              <p>{{ evento.lugar }}</p>
+              <p>{{ evento.cantidad }} personas</p>
             </div>
             <div v-else>
               <h3>Editar Evento</h3>

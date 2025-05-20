@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 // Vistas públicas (Login/Register)
-import AuthView from '@/views/AuthView.vue'
 import LoginView from '@/views/LoginView.vue'
 import RegisterView from '@/views/RegisterView.vue'
 
@@ -15,22 +14,16 @@ const routes = [
     redirect: '/auth/login' // Vista principal redirige al login
   },
   {
-    path: '/auth',
-    component: AuthView,
-    children: [
-      {
-        path: 'login',
-        name: 'Login',
-        component: LoginView,
-        meta: { requiresGuest: true }
-      },
-      {
-        path: 'register',
-        name: 'Register',
-        component: RegisterView,
-        meta: { requiresGuest: true }
-      }
-    ]
+    path: '/auth/login',
+    name: 'Login',
+    component: LoginView,
+    meta: { requiresGuest: true }
+  },
+  {
+    path: '/auth/register',
+    name: 'Register',
+    component: RegisterView,
+    meta: { requiresGuest: true }
   },
   {
     path: '/app',
@@ -74,4 +67,3 @@ router.beforeEach((to, from, next) => {
 })
 
 export default router
-
