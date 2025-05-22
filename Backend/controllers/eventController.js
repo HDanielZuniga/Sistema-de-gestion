@@ -40,7 +40,7 @@ const getEvents = async (req, res) => {
 
     return res.status(200).json(eventos)
   } catch (error) {
-    console.error('❌ Error al obtener los eventos:', error)
+    console.error(' Error al obtener los eventos:', error)
     return res.status(500).json({ error: error.message || 'Error interno del servidor.' })
   }
 }

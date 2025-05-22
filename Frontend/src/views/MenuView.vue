@@ -1,15 +1,14 @@
 <template>
   <div class="gestion-container">
-    <!-- Botón que abre el menú emergente de perfil -->
-    <button class="btn-perfil" @click="mostrarPerfil = true"></button>
+    <button class="btn-perfil" @click="mostrarPerfil = true">
+      <img src="@/assets/avatar-default.png" alt="Perfil de usuario" />
+    </button>
 
-    <!-- Ventana emergente del perfil -->
     <div v-if="mostrarPerfil" class="overlay" @click.self="mostrarPerfil = false">
       <div class="perfil-popup">
         <h2>Mi Perfil</h2>
         <p><strong>Nombre:</strong> {{ nombreUsuario }}</p>
         <p><strong>Correo:</strong> {{ correoUsuario }}</p>
-        <p><strong>Teléfono:</strong> +57 312 345 6789</p>
         <button class="btn-cerrar-sesion" @click="logout">Cerrar Sesión</button>
         <button class="btn-cerrar" @click="mostrarPerfil = false"></button>
       </div>
@@ -41,13 +40,13 @@
             v-for="evento in eventos"
             :key="evento.id"
             class="event-card"
-            @click="modo === 'editar' ? cargarEvento(evento) : null"
+            @click="modo === 'editar' && (!eventoSeleccionado || eventoSeleccionado.id !== evento.id) ? cargarEvento(evento) : null"
           >
             <div v-if="!eventoSeleccionado || eventoSeleccionado.id !== evento.id">
               <h3>{{ evento.nombre }}</h3>
-              <p>{{ evento.fecha }}</p>
-              <p>{{ evento.lugar }}</p>
-              <p>{{ evento.cantidad }} personas</p>
+              <p><strong>Fecha:</strong> {{ formatearFecha(evento.fecha) }}</p>
+              <p><strong>Lugar:</strong> {{ evento.lugar }}</p>
+              <p><strong>Participantes:</strong> {{ evento.cantidad }} personas</p>
             </div>
             <div v-else>
               <h3>Editar Evento</h3>
@@ -90,6 +89,16 @@ const mostrarPerfil = ref(false)
 const nombreUsuario = ref('')
 const correoUsuario = ref('')
 
+const formatearFecha = (fechaStr) => {
+  const fecha = new Date(fechaStr)
+  return fecha.toLocaleDateString('es-CO', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
+}
+
 const mostrarFormulario = (tipo) => {
   modo.value = tipo
   eventoSeleccionado.value = null
@@ -104,19 +113,20 @@ const guardarEvento = async () => {
       cantidad: cantidad.value
     })
 
-    eventos.value.push(nuevoEvento.evento)
+    eventos.value.push(nuevoEvento)
     nombre.value = ''
     fecha.value = ''
     lugar.value = ''
     cantidad.value = ''
+    modo.value = ''
   } catch (error) {
-    console.error('No se pudo guardar el evento:', error)
+    console.error(' No se pudo guardar el evento:', error)
     alert('Error al guardar el evento. Verifica tu conexión o vuelve a intentarlo.')
   }
 }
 
 const cargarEvento = (evento) => {
-  eventoSeleccionado.value = { ...evento } // copia para edición
+  eventoSeleccionado.value = { ...evento }
 }
 
 const actualizarEvento = async () => {
@@ -130,9 +140,10 @@ const actualizarEvento = async () => {
 
     eventos.value = await getEventos()
     eventoSeleccionado.value = null
-    alert('Evento actualizado correctamente.')
+    modo.value = ''
+    alert(' Evento actualizado correctamente.')
   } catch (error) {
-    console.error('❌ Error al actualizar evento:', error)
+    console.error(' Error al actualizar evento:', error)
     alert('No se pudo actualizar el evento. Intenta nuevamente.')
   }
 }
@@ -145,21 +156,25 @@ const logout = () => {
 onMounted(async () => {
   try {
     const perfil = await obtenerPerfil()
-    nombreUsuario.value = perfil.firstName + ' ' + perfil.lastName
+    nombreUsuario.value = `${perfil.firstName} ${perfil.lastName}`
     correoUsuario.value = perfil.email
   } catch (error) {
-    console.error('❌ Error cargando perfil:', error)
+    console.error(' Error cargando perfil:', error)
+    alert('Error al obtener el perfil. Redirigiendo al login...')
+    logout()
   }
 
   try {
     eventos.value = await getEventos()
   } catch (error) {
-    console.error('❌ Error cargando eventos:', error)
+    console.error(' Error cargando eventos:', error)
+    alert('Error al cargar eventos. Intenta más tarde.')
   }
 })
 </script>
 
 <style scoped>
+
 .gestion-container {
   display: flex;
   justify-content: center;
@@ -270,20 +285,31 @@ input::placeholder {
   text-shadow: 0 0 4px #0f62fe66;
 }
 
+/* Botón de perfil con avatar */
 .btn-perfil {
   position: fixed;
-  top: 20px;
-  right: 20px;
-  background-color: #9a82f4;
+  top: 30px;
+  right: 30px;
+  width: 48px;
+  height: 48px;
   border: none;
-  padding: 10px 16px;
+  background: transparent;
+  padding: 0;
   border-radius: 50%;
-  color: white;
-  font-size: 1.1rem;
-  font-weight: bold;
+  overflow: hidden;
   cursor: pointer;
-  box-shadow: 0 0 10px rgba(154, 130, 244, 0.7);
+  box-shadow: 0 2px 6px rgba(15, 98, 254, 0.4);
+  transition: box-shadow 0.3s ease;
   z-index: 1001;
+}
+
+.btn-perfil img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 50%;
+  border: none;
 }
 
 .overlay {
@@ -300,14 +326,19 @@ input::placeholder {
   z-index: 1000;
 }
 
+/* Ajuste de posición del popup para evitar que se desborde */
 .perfil-popup {
   background-color: #ffffff;
   color: #333;
   padding: 2rem;
   border-radius: 12px;
   min-width: 300px;
+  max-width: 350px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  position: relative;
+  position: absolute;
+  top: 80px;
+  right: 95px;
+  z-index: 1002;
 }
 
 .btn-cerrar-sesion {
@@ -316,7 +347,7 @@ input::placeholder {
   padding: 10px;
   border-radius: 8px;
   border: none;
-  margin-top: 1rem;
+  margin-top: 2rem;
   font-weight: bold;
   width: 100%;
   cursor: pointer;
@@ -330,5 +361,37 @@ input::placeholder {
   border: none;
   font-size: 1.2rem;
   cursor: pointer;
+}
+
+/* Responsividad para móviles */
+@media (max-width: 600px) {
+  .btn-perfil {
+    top: 15px;
+    right: 15px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .perfil-popup {
+    right: 50%;
+    transform: translateX(50%);
+    padding: 1.5rem;
+    min-width: auto;
+    width: 80%;
+    font-size: 0.9rem;
+  }
+
+  .submit-btn {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+  }
+
+  h1 {
+    font-size: 1.4rem;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+  }
 }
 </style>

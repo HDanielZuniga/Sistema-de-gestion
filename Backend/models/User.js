@@ -1,5 +1,4 @@
 // models/User.js
-const bcrypt = require('bcrypt');
 
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
@@ -23,11 +22,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-  });
-
-  // Hook para encriptar password
-  User.beforeCreate(async (user) => {
-    user.password = await bcrypt.hash(user.password, 10);
   });
 
   // Relación 1:N con Events

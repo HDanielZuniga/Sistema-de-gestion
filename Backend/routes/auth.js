@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken')
 const { verifyToken } = require('../middlewares/authMiddleware')
 const { User } = require('../models')
 
-//  Registro
+// 🟢 Registro de usuario
 router.post('/register', async (req, res) => {
   try {
     const { firstName, lastName, email, password } = req.body
@@ -31,17 +31,24 @@ router.post('/register', async (req, res) => {
   }
 })
 
-//  Login
+// 🟡 Login de usuario
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body
 
     const usuario = await User.findOne({ where: { email } })
     if (!usuario) {
+      console.log('❌ Usuario no encontrado')
       return res.status(401).json({ message: 'Usuario no encontrado' })
     }
 
+    // Logs para depuración
+    console.log('🔐 Contraseña enviada:', password)
+    console.log('🔐 Contraseña en BD:', usuario.password)
+
     const passwordValida = await bcrypt.compare(password, usuario.password)
+    console.log('✅ ¿Coinciden?:', passwordValida)
+
     if (!passwordValida) {
       return res.status(401).json({ message: 'Contraseña incorrecta' })
     }
@@ -57,7 +64,7 @@ router.post('/login', async (req, res) => {
   }
 })
 
-//  Obtener perfil del usuario autenticado
+// 🟣 Obtener perfil del usuario autenticado
 router.get('/me', verifyToken, async (req, res) => {
   try {
     const user = await User.findByPk(req.userId, {
