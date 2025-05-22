@@ -7,8 +7,8 @@
     <div v-if="mostrarPerfil" class="overlay" @click.self="mostrarPerfil = false">
       <div class="perfil-popup">
         <h2>Mi Perfil</h2>
-        <p><strong>Nombre:</strong> Juan Pérez</p>
-        <p><strong>Correo:</strong> juan.perez@example.com</p>
+        <p><strong>Nombre:</strong> {{ nombreUsuario }}</p>
+        <p><strong>Correo:</strong> {{ correoUsuario }}</p>
         <p><strong>Teléfono:</strong> +57 312 345 6789</p>
         <button class="btn-cerrar-sesion" @click="logout">Cerrar Sesión</button>
         <button class="btn-cerrar" @click="mostrarPerfil = false"></button>
@@ -67,11 +67,15 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { crearEvento, getEventos } from '../services/eventService'
+import { obtenerPerfil } from '../services/perfilService' // ✅ nuevo servicio
 
+// Router
 const router = useRouter()
 
+// Estado de eventos
 const eventos = ref([])
 const nombre = ref('')
 const fecha = ref('')
@@ -81,37 +85,69 @@ const modo = ref('')
 const eventoSeleccionado = ref(null)
 const mostrarPerfil = ref(false)
 
+// ✅ Estado del perfil del usuario
+const nombreUsuario = ref('')
+const correoUsuario = ref('')
+
+// Mostrar u ocultar formulario
 const mostrarFormulario = (tipo) => {
   modo.value = tipo
   eventoSeleccionado.value = null
 }
 
-const guardarEvento = () => {
-  eventos.value.push({
-    id: Date.now(),
-    nombre: nombre.value,
-    fecha: fecha.value,
-    lugar: lugar.value,
-    cantidad: cantidad.value
-  })
-  nombre.value = ''
-  fecha.value = ''
-  lugar.value = ''
-  cantidad.value = ''
+// Crear evento
+const guardarEvento = async () => {
+  try {
+    const nuevoEvento = await crearEvento({
+      nombre: nombre.value,
+      fecha: fecha.value,
+      lugar: lugar.value,
+      cantidad: cantidad.value
+    })
+
+    eventos.value.push(nuevoEvento.evento)
+    nombre.value = ''
+    fecha.value = ''
+    lugar.value = ''
+    cantidad.value = ''
+  } catch (error) {
+    console.error('No se pudo guardar el evento:', error)
+    alert('Error al guardar el evento. Verifica tu conexión o vuelve a intentarlo.')
+  }
 }
 
+// Cargar evento para editar
 const cargarEvento = (evento) => {
-  eventoSeleccionado.value = evento // Referencia directa
+  eventoSeleccionado.value = evento
 }
 
+// Cancelar edición
 const actualizarEvento = () => {
-  eventoSeleccionado.value = null // Cierra formulario tras actualizar
+  eventoSeleccionado.value = null
 }
 
+// Cerrar sesión
 const logout = () => {
   localStorage.removeItem('authToken')
   router.push('/auth/login')
 }
+
+// Cargar perfil y eventos al montar
+onMounted(async () => {
+  try {
+    const perfil = await obtenerPerfil()
+    nombreUsuario.value = perfil.firstName + ' ' + perfil.lastName
+    correoUsuario.value = perfil.email
+  } catch (error) {
+    console.error('❌ Error cargando perfil:', error)
+  }
+
+  try {
+    eventos.value = await getEventos()
+  } catch (error) {
+    console.error('❌ Error cargando eventos:', error)
+  }
+})
 </script>
 
 <style scoped>

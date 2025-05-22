@@ -19,10 +19,22 @@
         <p v-if="error" style="color: red; margin-top: 10px;">{{ error }}</p>
 
         <form @submit.prevent="submitForm">
-          <input type="email" placeholder="Email" v-model="email" required />
-          <input type="password" placeholder="Ingresa tu contraseña" v-model="password" required />
-          <button class="submit-btn" type="submit">Login</button>
-        </form>
+  <input
+    type="email"
+    placeholder="Email"
+    v-model="email"
+    autocomplete="email"
+    required
+  />
+  <input
+    type="password"
+    placeholder="Ingresa tu contraseña"
+    v-model="password"
+    autocomplete="current-password"
+    required
+  />
+  <button class="submit-btn" type="submit">Login</button>
+</form>
       </div>
     </div>
   </div>

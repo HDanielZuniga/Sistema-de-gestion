@@ -18,13 +18,38 @@
         </p>
         <p v-if="error" style="color: red; margin-top: 10px;">{{ error }}</p>
 
-        <form @submit.prevent="submitForm">
-          <input type="text" placeholder="Primer nombre" v-model="firstName" required />
-          <input type="text" placeholder="Segundo nombre" v-model="lastName" required />
-          <input type="email" placeholder="Email" v-model="email" required />
-          <input type="password" placeholder="Contraseña" v-model="password" required />
-          <button class="submit-btn" type="submit">Registrate</button>
-        </form>
+       <form @submit.prevent="submitForm">
+  <input
+    type="text"
+    placeholder="Primer nombre"
+    v-model="firstName"
+    autocomplete="given-name"
+    required
+  />
+  <input
+    type="text"
+    placeholder="Segundo nombre"
+    v-model="lastName"
+    autocomplete="family-name"
+    required
+  />
+  <input
+    type="email"
+    placeholder="Email"
+    v-model="email"
+    autocomplete="email"
+    required
+  />
+  <input
+    type="password"
+    placeholder="Contraseña"
+    v-model="password"
+    autocomplete="new-password"
+    required
+  />
+  <button class="submit-btn" type="submit">Registrate</button>
+</form>
+
       </div>
     </div>
   </div>

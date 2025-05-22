@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const connectDB = require('./config/database');
 const authRoutes = require('./routes/auth');
+const eventRoutes = require('./routes/events');
 const morgan = require('morgan');
 
 dotenv.config();
@@ -28,6 +29,7 @@ app.get('/', (req, res) => {
 
 // Rutas
 app.use('/api/auth', authRoutes);
+app.use('/api/events', eventRoutes);
 
 // Servidor
 const PORT = process.env.PORT || 5000;

@@ -1,34 +1,42 @@
 // models/User.js
-const { DataTypes } = require('sequelize');
-const { sequelize } = require('../config/database');
 const bcrypt = require('bcrypt');
 
-const User = sequelize.define('User', {
-  firstName: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  lastName: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  email: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-    validate: {
-      isEmail: true,
+module.exports = (sequelize, DataTypes) => {
+  const User = sequelize.define('User', {
+    firstName: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
-  },
-  password: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-});
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      validate: {
+        isEmail: true,
+      },
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+  });
 
-// Encriptar password antes de guardar
-User.beforeCreate(async (user) => {
-  user.password = await bcrypt.hash(user.password, 10);
-});
+  // Hook para encriptar password
+  User.beforeCreate(async (user) => {
+    user.password = await bcrypt.hash(user.password, 10);
+  });
 
-module.exports = User;
+  // Relación 1:N con Events
+  User.associate = function(models) {
+    User.hasMany(models.Event, {
+      foreignKey: 'userId',
+      as: 'eventos'
+    });
+  };
+
+  return User;
+};

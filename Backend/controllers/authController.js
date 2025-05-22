@@ -1,8 +1,9 @@
 // controllers/authController.js
-const User = require('../models/User');
+const { User } = require('../models'); // ✅ Correcto
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
+// Registro de usuario
 exports.register = async (req, res) => {
   try {
     const { firstName, lastName, email, password } = req.body;
@@ -17,18 +18,19 @@ exports.register = async (req, res) => {
     }
 
     const newUser = await User.create({ firstName, lastName, email, password });
-    res.status(201).json({ message: 'Usuario registrado exitosamente.', user: newUser });
 
+    res.status(201).json({ message: 'Usuario registrado exitosamente.', user: newUser });
   } catch (error) {
-    console.error('ERROR EN REGISTRO:', error); // 🔥 Muestra error exacto en consola
+    console.error('ERROR EN REGISTRO:', error);
     res.status(500).json({ message: 'Error al registrar usuario.', error: error.message });
   }
 };
 
+// Login de usuario
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    
+
     const user = await User.findOne({ where: { email } });
     if (!user) {
       return res.status(404).json({ message: 'Usuario no encontrado.' });
@@ -43,7 +45,7 @@ exports.login = async (req, res) => {
 
     res.status(200).json({ message: 'Login exitoso', token });
   } catch (error) {
-    console.error('ERROR EN LOGIN:', error); // 🔥 Muestra error exacto en consola
+    console.error('ERROR EN LOGIN:', error);
     res.status(500).json({ message: 'Error al iniciar sesión.', error: error.message });
   }
 };
