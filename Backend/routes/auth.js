@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken')
 const { verifyToken } = require('../middlewares/authMiddleware')
 const { User } = require('../models')
 
-// 🟢 Registro de usuario
+//  Registro de usuario
 router.post('/register', async (req, res) => {
   try {
     const { firstName, lastName, email, password } = req.body
@@ -26,28 +26,28 @@ router.post('/register', async (req, res) => {
 
     res.status(201).json({ user: nuevoUsuario })
   } catch (error) {
-    console.error('❌ Error en /register:', error)
+    console.error(' Error en /register:', error)
     res.status(500).json({ message: 'Error al registrar usuario' })
   }
 })
 
-// 🟡 Login de usuario
+//  Login de usuario
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body
 
     const usuario = await User.findOne({ where: { email } })
     if (!usuario) {
-      console.log('❌ Usuario no encontrado')
+      console.log(' Usuario no encontrado')
       return res.status(401).json({ message: 'Usuario no encontrado' })
     }
 
     // Logs para depuración
-    console.log('🔐 Contraseña enviada:', password)
-    console.log('🔐 Contraseña en BD:', usuario.password)
+    console.log(' Contraseña enviada:', password)
+    console.log(' Contraseña en BD:', usuario.password)
 
     const passwordValida = await bcrypt.compare(password, usuario.password)
-    console.log('✅ ¿Coinciden?:', passwordValida)
+    console.log(' ¿Coinciden?:', passwordValida)
 
     if (!passwordValida) {
       return res.status(401).json({ message: 'Contraseña incorrecta' })
@@ -59,12 +59,12 @@ router.post('/login', async (req, res) => {
 
     res.status(200).json({ token })
   } catch (error) {
-    console.error('❌ Error en /login:', error)
+    console.error(' Error en /login:', error)
     res.status(500).json({ message: 'Error al iniciar sesión' })
   }
 })
 
-// 🟣 Obtener perfil del usuario autenticado
+//  Obtener perfil del usuario autenticado
 router.get('/me', verifyToken, async (req, res) => {
   try {
     const user = await User.findByPk(req.userId, {
@@ -77,7 +77,7 @@ router.get('/me', verifyToken, async (req, res) => {
 
     res.status(200).json(user)
   } catch (error) {
-    console.error('❌ Error en /me:', error)
+    console.error(' Error en /me:', error)
     res.status(500).json({ message: 'Error obteniendo perfil de usuario' })
   }
 })

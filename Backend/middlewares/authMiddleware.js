@@ -8,7 +8,6 @@ exports.verifyToken = (req, res, next) => {
     return res.status(401).json({ message: 'No token provided.' });
   }
 
-  // Si tiene "Bearer ", lo quitamos
   if (token.startsWith('Bearer ')) {
     token = token.slice(7, token.length);
   }
@@ -16,7 +15,7 @@ exports.verifyToken = (req, res, next) => {
   try {
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
       if (err) return res.status(401).json({ message: 'Token inválido.' });
-      req.userId = decoded.id; // ✅ Aquí extraemos el id guardado en el token
+      req.userId = decoded.id; 
       next();
     });
   } catch (error) {

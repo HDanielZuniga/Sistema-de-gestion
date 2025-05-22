@@ -4,8 +4,8 @@ const sequelize = require('./config/database');
 
 sequelize.authenticate()
   .then(() => {
-    console.log('✅ Conexión establecida con PostgreSQL');
+    console.log(' Conexión establecida con PostgreSQL');
   })
   .catch((error) => {
-    console.error('❌ Error al conectar con PostgreSQL:', error);
+    console.error(' Error al conectar con PostgreSQL:', error);
   });

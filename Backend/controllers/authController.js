@@ -17,10 +17,10 @@ exports.register = async (req, res) => {
       return res.status(400).json({ message: 'El correo ya está registrado.' });
     }
 
-    // 🔐 Encriptar la contraseña correctamente
+    //  Encriptar la contraseña correctamente
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log('🔐 Contraseña enviada:', password);
-    console.log('🔐 Contraseña en BD:', hashedPassword);
+    console.log(' Contraseña enviada:', password);
+    console.log(' Contraseña en BD:', hashedPassword);
 
     const newUser = await User.create({
       firstName,
