@@ -14,7 +14,7 @@
         <h1>Registrate</h1>
         <p class="subtitle">
           Ya tienes tu cuenta?
-          <router-link to="/auth/login" style="color: #9a82f4; text-decoration: none;">Ingresa aqui</router-link>
+          <router-link to="/auth/login" class="enlace-login">Ingresa aquí</router-link>
         </p>
         <p v-if="error" style="color: red; margin-top: 10px;">{{ error }}</p>
 
@@ -99,7 +99,7 @@ html, body {
 }
 
 .register-container {
-  background-color: #2d2a3e;
+  background-color: #1e1e2f;
   position: fixed;
   inset: 0;
   display: flex;
@@ -111,10 +111,10 @@ html, body {
 .register-box {
   display: flex;
   width: 900px;
-  background-color: #1e1c2e;
+  background-color: #2c2c3e;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 12px 24px rgba(15, 98, 254, 0.3);
 }
 
 .register-left {
@@ -133,7 +133,7 @@ html, body {
   position: absolute;
   bottom: 40px;
   left: 30px;
-  color: #fff;
+  color: #ffffff;
   font-size: 20px;
   font-weight: 500;
 }
@@ -141,7 +141,7 @@ html, body {
 .register-right {
   width: 50%;
   padding: 40px;
-  color: #fff;
+  color: #ffffff;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -158,25 +158,36 @@ html, body {
   color: #aaa;
 }
 
-.subtitle a {
-  color: #9a82f4;
+/* Enlace con color de paleta unificada */
+.enlace-login {
+  color: #0f62fe;
   text-decoration: none;
+  font-weight: 600;
+}
+
+.enlace-login:hover {
+  text-decoration: underline;
+  color: #0353e9;
 }
 
 input {
   width: 100%;
   padding: 10px;
   margin: 10px 0;
-  background-color: #2e2b43;
+  background-color: #3a3a4f;
   border: 1px solid #444;
   border-radius: 8px;
   color: white;
   font-size: 15px;
 }
 
+input::placeholder {
+  color: #b0b0b0;
+}
+
 .submit-btn {
   width: 100%;
-  background-color: #9a82f4;
+  background-color: #0f62fe;
   border: none;
   padding: 12px;
   border-radius: 8px;
@@ -184,10 +195,10 @@ input {
   color: #fff;
   margin-top: 10px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: background-color 0.3s ease;
 }
 
 .submit-btn:hover {
-  background-color: #7d65d7;
+  background-color: #0353e9;
 }
 </style>
