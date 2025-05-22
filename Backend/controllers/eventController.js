@@ -23,7 +23,7 @@ const createEvent = async (req, res) => {
       evento: nuevoEvento
     })
   } catch (error) {
-    console.error('❌ Error al crear el evento:', error)
+    console.error(' Error al crear el evento:', error)
     return res.status(500).json({ error: error.message || 'Error interno del servidor.' })
   }
 }

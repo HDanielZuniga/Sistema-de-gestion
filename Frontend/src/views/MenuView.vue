@@ -69,13 +69,15 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { crearEvento, getEventos } from '../services/eventService'
-import { obtenerPerfil } from '../services/perfilService' // ✅ nuevo servicio
+import {
+  crearEvento,
+  getEventos,
+  actualizarEvento as actualizarEventoBackend
+} from '../services/eventService'
+import { obtenerPerfil } from '../services/perfilService'
 
-// Router
 const router = useRouter()
 
-// Estado de eventos
 const eventos = ref([])
 const nombre = ref('')
 const fecha = ref('')
@@ -85,17 +87,14 @@ const modo = ref('')
 const eventoSeleccionado = ref(null)
 const mostrarPerfil = ref(false)
 
-// ✅ Estado del perfil del usuario
 const nombreUsuario = ref('')
 const correoUsuario = ref('')
 
-// Mostrar u ocultar formulario
 const mostrarFormulario = (tipo) => {
   modo.value = tipo
   eventoSeleccionado.value = null
 }
 
-// Crear evento
 const guardarEvento = async () => {
   try {
     const nuevoEvento = await crearEvento({
@@ -116,23 +115,33 @@ const guardarEvento = async () => {
   }
 }
 
-// Cargar evento para editar
 const cargarEvento = (evento) => {
-  eventoSeleccionado.value = evento
+  eventoSeleccionado.value = { ...evento } // copia para edición
 }
 
-// Cancelar edición
-const actualizarEvento = () => {
-  eventoSeleccionado.value = null
+const actualizarEvento = async () => {
+  try {
+    await actualizarEventoBackend(eventoSeleccionado.value.id, {
+      nombre: eventoSeleccionado.value.nombre,
+      fecha: eventoSeleccionado.value.fecha,
+      lugar: eventoSeleccionado.value.lugar,
+      cantidad: eventoSeleccionado.value.cantidad
+    })
+
+    eventos.value = await getEventos()
+    eventoSeleccionado.value = null
+    alert('Evento actualizado correctamente.')
+  } catch (error) {
+    console.error('❌ Error al actualizar evento:', error)
+    alert('No se pudo actualizar el evento. Intenta nuevamente.')
+  }
 }
 
-// Cerrar sesión
 const logout = () => {
   localStorage.removeItem('authToken')
   router.push('/auth/login')
 }
 
-// Cargar perfil y eventos al montar
 onMounted(async () => {
   try {
     const perfil = await obtenerPerfil()
