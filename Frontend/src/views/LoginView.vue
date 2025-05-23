@@ -3,7 +3,7 @@
     <div class="login-box">
       <!-- Lado Izquierdo: Imagen + Frase -->
       <div class="login-left">
-        <img src="/desert.jpg" alt="Login Illustration" />
+        <img src="/Fondo.jpeg" alt="Login Illustration" />
         <div class="overlay-text">
           <h2>Capturando Momentos,<br />Creando Memorias</h2>
         </div>

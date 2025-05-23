@@ -3,7 +3,7 @@
     <div class="register-box">
       <!-- Lado Izquierdo: Imagen + Frase -->
       <div class="register-left">
-        <img src="/register.jpg" alt="Register Illustration" />
+        <img src="/Fondo2.jpeg" alt="Register Illustration" />
         <div class="overlay-text">
           <h2>Unete,<br />Captura tus momentos</h2>
         </div>
