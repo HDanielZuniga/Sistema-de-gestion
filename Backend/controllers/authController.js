@@ -1,9 +1,8 @@
-// controllers/authController.js
 const { User } = require('../models');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-// Registro de usuario
+// Registrar usuario
 exports.register = async (req, res) => {
   try {
     const { firstName, lastName, email, password } = req.body;
@@ -17,16 +16,13 @@ exports.register = async (req, res) => {
       return res.status(400).json({ message: 'El correo ya está registrado.' });
     }
 
-    //  Encriptar la contraseña correctamente
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log(' Contraseña enviada:', password);
-    console.log(' Contraseña en BD:', hashedPassword);
 
     const newUser = await User.create({
       firstName,
       lastName,
       email,
-      password: hashedPassword,
+      password: hashedPassword
     });
 
     res.status(201).json({ message: 'Usuario registrado exitosamente.', user: newUser });
@@ -36,7 +32,7 @@ exports.register = async (req, res) => {
   }
 };
 
-// Login de usuario
+// Iniciar sesión
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -47,10 +43,6 @@ exports.login = async (req, res) => {
     }
 
     const validPassword = await bcrypt.compare(password, user.password);
-    console.log(' Contraseña enviada:', password);
-    console.log(' Contraseña en BD:', user.password);
-    console.log(' ¿Coinciden?:', validPassword);
-
     if (!validPassword) {
       return res.status(401).json({ message: 'Contraseña incorrecta.' });
     }

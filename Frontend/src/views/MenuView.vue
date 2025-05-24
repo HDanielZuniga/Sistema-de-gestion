@@ -89,8 +89,10 @@ const mostrarPerfil = ref(false)
 const nombreUsuario = ref('')
 const correoUsuario = ref('')
 
+// Formatear fecha con verificación
 const formatearFecha = (fechaStr) => {
   const fecha = new Date(fechaStr)
+  if (isNaN(fecha)) return 'Fecha inválida'
   return fecha.toLocaleDateString('es-CO', {
     weekday: 'long',
     year: 'numeric',
@@ -108,9 +110,9 @@ const guardarEvento = async () => {
   try {
     const nuevoEvento = await crearEvento({
       nombre: nombre.value,
-      fecha: fecha.value,
+      fecha: new Date(fecha.value).toISOString(), 
       lugar: lugar.value,
-      cantidad: cantidad.value
+      cantidad: parseInt(cantidad.value)
     })
 
     eventos.value.push(nuevoEvento)
@@ -133,9 +135,9 @@ const actualizarEvento = async () => {
   try {
     await actualizarEventoBackend(eventoSeleccionado.value.id, {
       nombre: eventoSeleccionado.value.nombre,
-      fecha: eventoSeleccionado.value.fecha,
+      fecha: new Date(eventoSeleccionado.value.fecha).toISOString(), // 👈 También se formatea
       lugar: eventoSeleccionado.value.lugar,
-      cantidad: eventoSeleccionado.value.cantidad
+      cantidad: parseInt(eventoSeleccionado.value.cantidad)
     })
 
     eventos.value = await getEventos()
@@ -166,6 +168,7 @@ onMounted(async () => {
 
   try {
     eventos.value = await getEventos()
+    console.log('Eventos cargados:', eventos.value)
   } catch (error) {
     console.error(' Error cargando eventos:', error)
     alert('Error al cargar eventos. Intenta más tarde.')

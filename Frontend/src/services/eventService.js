@@ -12,7 +12,7 @@ export const crearEvento = async (eventoData) => {
     })
     return response.data
   } catch (error) {
-    console.error('❌ Error creando evento:', error)
+    console.error(' Error creando evento:', error)
     if (error.response) {
       console.error('Backend dice:', error.response.data)
     }
@@ -32,7 +32,7 @@ export const getEventos = async () => {
     })
     return response.data
   } catch (error) {
-    console.error('❌ Error obteniendo eventos:', error)
+    console.error(' Error obteniendo eventos:', error)
     if (error.response) {
       console.error('Backend dice:', error.response.data)
     }
@@ -40,7 +40,7 @@ export const getEventos = async () => {
   }
 }
 
-// ✅ Actualizar evento existente
+// Actualizar evento existente
 export const actualizarEvento = async (id, datosActualizados) => {
   const token = localStorage.getItem('authToken')
 
@@ -52,7 +52,7 @@ export const actualizarEvento = async (id, datosActualizados) => {
     })
     return response.data
   } catch (error) {
-    console.error('❌ Error actualizando evento:', error)
+    console.error(' Error actualizando evento:', error)
     if (error.response) {
       console.error('Backend dice:', error.response.data)
     }
